@@ -11,7 +11,14 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html')
 })
 
+const users = {}
+
 io.on('connection', (socket) => {
+  socket.on('login', ({ userId }) => {
+    console.log('socket id', socket.id)
+    users[socket.id] = userId
+  })
+
   socket.on('chat', (msg) => {
     sendChat({
       type: 'chat',
@@ -19,11 +26,13 @@ io.on('connection', (socket) => {
       nickName: msg.nickName
     })
   })
+
   socket.on('disconnect', () => {
     sendChat({
       type: 'announce',
       message: 'ユーザーが退室しました'
     })
+    delete users[socket.id]
   })
 })
 
