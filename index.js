@@ -13,14 +13,21 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
   socket.on('chat', (msg) => {
-    sendChat(msg)
+    sendChat({
+      type: 'chat',
+      message: msg.message,
+      nickName: msg.nickName
+    })
   })
   socket.on('disconnect', () => {
-    sendChat('ユーザーが退室しました')
+    sendChat({
+      type: 'announce',
+      message: 'ユーザーが退室しました'
+    })
   })
 })
 
-const sendChat = (msg) => io.emit('chat', msg)
+const sendChat = (payload) => io.emit('chat', payload)
 
 server.listen(3000, () => {
   console.log('listening on *:3000')
