@@ -29,24 +29,26 @@
             nickName: nickName.value,
             message: input.value
           })
+          addMessageElm(`${nickName.value}: ${input.value}`)
           input.value = ''
         }
       })
 
       socket.on('chat', function (msg) {
         console.log(msg)
-        if (msg.type === 'announce') {
-          const item = document.createElement('li')
-          item.textContent = msg.message
-          console.log('v: ', msg.v)
-          messages.appendChild(item)
-        } else {
-          const item = document.createElement('li')
-          item.textContent = `${msg.nickName}: ${msg.message} 問題: ${msg.quiz}`
-          messages.appendChild(item)
-        }
+        addMessageElm(
+          msg.type === 'announce'
+            ? msg.message
+            : `${msg.nickName}: ${msg.message}`
+        )
         window.scrollTo(0, document.body.scrollHeight)
       })
+
+      const addMessageElm = (content) => {
+        const item = document.createElement('li')
+        item.textContent = content
+        messages.appendChild(item)
+      }
     </script>
   </body>
 </html>

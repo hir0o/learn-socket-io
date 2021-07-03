@@ -20,7 +20,8 @@ io.on('connection', (socket) => {
   })
 
   socket.on('chat', (msg) => {
-    sendChat({
+    // 自分以外に送信
+    socket.broadcast.emit('chat', {
       type: 'chat',
       message: msg.message,
       nickName: msg.nickName
